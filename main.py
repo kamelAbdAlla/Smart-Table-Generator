@@ -5,6 +5,9 @@ from datetime import datetime
 import json
 import numpy as np
 from fastapi import FastAPI
+import os
+
+AI_API_KEY = os.getenv("AiApiKey")
 
 # =========================================================
 # 1. TIME UTILITIES
@@ -374,6 +377,8 @@ def run_solver(data, prefs, option):
 
 @app.post("/generate-schedule")
 def generate_schedule(request: dict):
+    if not AI_API_KEY:
+        return {"error": "API Key is missing on the server settings!"}
     try:
         data = request["courses"]
         prefs = request.get("preferences", {})
